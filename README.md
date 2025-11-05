@@ -16,8 +16,7 @@ flowchart TD
   F3 --> F4[Assemble per-task features]
 
   F4 --> AG0[Age branch]
-  subgraph AGE [Age model (multiclass)]
-    direction TB
+  subgraph AGE_M [Age model - multiclass]
     AG0 --> AG1[age_train_idx = age_bin6_true notna]
     AG1 --> AG2[X_age, y_age_str]
     AG2 --> AG3[LabelEncode -> y_age_enc]
@@ -42,8 +41,7 @@ flowchart TD
   end
 
   F4 --> GG0[Gender branch]
-  subgraph GENDER [Gender model (binary)]
-    direction TB
+  subgraph GENDER_B [Gender model - binary]
     GG0 --> GG1[g_known_idx = gender_norm in {M,F}]
     GG1 --> GG2[X_g, y_g_str]
     GG2 --> GG3[LabelEncode -> y_g_enc]
