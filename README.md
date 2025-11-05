@@ -1,5 +1,5 @@
-flowchart TD
 ```mermaid
+flowchart TD
   S([Start]) --> I[Input: df_all, age_col, gender_col, cv_sample_max, do_cv, run_age_sweep]
   I --> A1[Age prep: c_age -> numeric; known_age = notna & != -1]
   A1 --> D1{known_age empty?}
