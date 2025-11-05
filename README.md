@@ -15,8 +15,7 @@ flowchart TD
   F2 --> F3[Package feats: _maybe_add_package_features]
   F3 --> F4[Assemble per-task features]
 
-  %% ----- AGE subgraph -----
-  F4 --> AG0
+  F4 --> AG0[Age branch]
   subgraph AGE [Age model (multiclass)]
     direction TB
     AG0 --> AG1[age_train_idx = age_bin6_true notna]
@@ -27,22 +26,22 @@ flowchart TD
     AG5 --> AG6{do_cv?}
     AG6 -->|Yes| AG7[_stratified_sample]
     AG7 --> AG8[CV (5-fold) -> age_metrics]
-    AG8 --> AG9{run_age_sweep & _HAS_XGB?}
-    AG6 -->|No| AG9
-    AG9 -->|Yes| AG10[_run_age_sweep -> best params]
-    AG9 -->|No| AG11[Skip sweep]
-    AG10 --> AG12[Get classifier + override]
-    AG11 --> AG12[Get classifier]
-    AG12 --> AG13[Fit final age pipeline (sw_age)]
-    AG13 --> AG14{Missing ages?}
-    AG14 -->|Yes| AG15[Predict age_bin6_pred; proba_max]
-    AG14 -->|No| AG16[Set pred/proba NaN]
-    AG15 --> AG17[age_bin6_filled = true else pred]
-    AG16 --> AG17
+    AG6 -->|No| AG9[Skip CV]
+    AG8 --> AG10{run_age_sweep & _HAS_XGB?}
+    AG9 --> AG10
+    AG10 -->|Yes| AG11[_run_age_sweep -> best params]
+    AG10 -->|No| AG12[Use default params]
+    AG11 --> AG13[Get classifier + override]
+    AG12 --> AG13[Get classifier]
+    AG13 --> AG14[Fit final age pipeline (sw_age)]
+    AG14 --> AG15{Missing ages?}
+    AG15 -->|Yes| AG16[Predict age_bin6_pred; proba_max]
+    AG15 -->|No| AG17[Set pred/proba NaN]
+    AG16 --> AG18[age_bin6_filled = true else pred]
+    AG17 --> AG18
   end
 
-  %% ----- GENDER subgraph -----
-  F4 --> GG0
+  F4 --> GG0[Gender branch]
   subgraph GENDER [Gender model (binary)]
     direction TB
     GG0 --> GG1[g_known_idx = gender_norm in {M,F}]
@@ -64,8 +63,8 @@ flowchart TD
     GG14 --> GG15
   end
 
-  AGE --> O1[Attach attrs: age_bin6_edges, age_bin6_labels]
-  GENDER --> O1
+  AG18 --> O1[Attach attrs: age_bin6_edges, age_bin6_labels]
+  GG15 --> O1
   O1 --> O2[Return df (+new cols), metrics, label_info]
   O2 --> END([End])
   ```
