@@ -1,7 +1,4 @@
 classDiagram
-direction LR
-
-%% ===== Entities & Value Objects =====
 abstract class Institution {
   +id: string
   +name: string
