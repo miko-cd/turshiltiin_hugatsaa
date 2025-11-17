@@ -111,15 +111,6 @@ EventsPage --> EventService : uses
 ScholarshipCalculatorPage --> ScholarshipCalculator : uses
 UniversityService --> University : returns
 EventService --> Event : returns
-
-UniversitiesPage <<boundary>>
-UniversityDetailPage <<boundary>>
-EventsPage <<boundary>>
-ScholarshipCalculatorPage <<boundary>>
-UniversityService <<control>>
-EventService <<control>>
-ScholarshipCalculator <<control>>
-University <<entity>>
 Scholarship <<entity>>
 Program <<valueObject>>
 UniversityProgram <<entity>>
