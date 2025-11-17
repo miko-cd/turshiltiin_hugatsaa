@@ -1,3 +1,4 @@
+```mermaid
 classDiagram
 abstract class Institution {
   +id: string
@@ -125,3 +126,4 @@ ScholarshipCalculatorPage --> ScholarshipCalculator : uses
 
 UniversityService --> MockDataSource : reads
 EventService --> MockDataSource : reads
+```
