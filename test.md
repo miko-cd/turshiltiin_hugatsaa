@@ -1,9 +1,7 @@
 ``` mermaid
 classDiagram
-
 direction LR
-
-abstract class Institution {
+class Institution {
   id: string
   name: string
   city: string
