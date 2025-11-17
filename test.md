@@ -111,9 +111,4 @@ EventsPage --> EventService : uses
 ScholarshipCalculatorPage --> ScholarshipCalculator : uses
 UniversityService --> University : returns
 EventService --> Event : returns
-Scholarship <<entity>>
-Program <<valueObject>>
-UniversityProgram <<entity>>
-Ranking <<view>>
-Event <<entity>>
 ```
