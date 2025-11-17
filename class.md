@@ -1,21 +1,23 @@
 ```mermaid
 classDiagram
-abstract class Institution {
+direction LR
+
+class Institution <<abstract>> {
   +id: string
   +name: string
   +city: string
-  +description?: string
-  +website?: string
-  +email?: string
-  +phone?: string
+  +description: string
+  +website: string
+  +email: string
+  +phone: string
 }
 
 class University <<entity>> {
   +qsRank: number
-  +tuitionMntPerYear?: number
-  +acceptanceRatePct?: number
-  +getScholarships(): Scholarship[*]
-  +getPrograms(): Program[*]
+  +tuitionMntPerYear: number
+  +acceptanceRatePct: number
+  +getScholarships(): Scholarship[]
+  +getPrograms(): Program[]
 }
 
 Institution <|-- University
@@ -23,11 +25,11 @@ Institution <|-- University
 class Scholarship <<entity>> {
   +name: string
   +type: ScholarshipType
-  +amountMnt?: number
+  +amountMnt: number
   +description: string
 }
 
-class Program <<value object>> {
+class Program <<valueObject>> {
   +name: string
 }
 
@@ -36,7 +38,7 @@ class UniversityProgram <<entity>> {
   +programId: string
 }
 
-class Ranking <<entity/view>> {
+class Ranking <<view>> {
   +universityId: string
   +name: string
   +qsRank: number
@@ -54,7 +56,7 @@ class Event <<entity>> {
   +spots: number
   +registered: number
   +online: boolean
-  +hostedUniversityId?: string
+  +hostedUniversityId: string
 }
 
 class ScholarshipType <<enumeration>> {
@@ -71,10 +73,9 @@ Program "1" o-- "*" UniversityProgram
 University "1" -- "1" Ranking : has
 University "0..1" o-- "*" Event : hosts
 
-%% ===== Controls (Application logic) =====
 class UniversityService <<control>> {
   +list(): University[]
-  +getById(id: string): University?
+  +getById(id: string): University
   +listRankings(): Ranking[]
 }
 
@@ -87,43 +88,21 @@ class ScholarshipCalculator <<control>> {
   +getRecommendation(score: number): Recommendation
 }
 
-class Recommendation <<value object>> {
+class Recommendation <<valueObject>> {
   +text: string
   +color: string
   +emoji: string
 }
 
-%% ===== Boundary (UI/Pages) =====
-class UniversitiesPage <<boundary>> {
-  +render()
-  +search()
-}
+class UniversitiesPage <<boundary>> { +render(); +search() }
+class UniversityDetailPage <<boundary>> { +render(id: string) }
+class EventsPage <<boundary>> { +render() }
+class ScholarshipCalculatorPage <<boundary>> { +render() }
 
-class UniversityDetailPage <<boundary>> {
-  +render(id: string)
-}
-
-class EventsPage <<boundary>> {
-  +render()
-}
-
-class ScholarshipCalculatorPage <<boundary>> {
-  +render()
-}
-
-%% ===== Data source (mock) =====
-class MockDataSource <<datasource>> {
-  +mockUniversities: University[]
-  +mockRankings(): Ranking[]
-  +events: Event[]
-}
-
-%% ===== Interactions =====
 UniversitiesPage --> UniversityService : uses
 UniversityDetailPage --> UniversityService : uses
 EventsPage --> EventService : uses
 ScholarshipCalculatorPage --> ScholarshipCalculator : uses
-
-UniversityService --> MockDataSource : reads
-EventService --> MockDataSource : reads
+UniversityService --> University : returns
+EventService --> Event : returns
 ```
