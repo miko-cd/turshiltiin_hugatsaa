@@ -1,5 +1,6 @@
 ```mermaid
 classDiagram
+
 direction LR
 
 abstract class Institution {
@@ -19,7 +20,6 @@ class University {
   getScholarships(): Scholarship[]
   getPrograms(): Program[]
 }
-
 Institution <|-- University
 
 class Scholarship {
@@ -47,7 +47,7 @@ class Ranking {
 class Event {
   id: number
   title: string
-  date: Date
+  date: string
   time: string
   location: string
   type: string
