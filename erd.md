@@ -1,7 +1,7 @@
 ``` mermaid
 erDiagram
     UNIVERSITY {
-      string id PK
+      string id
       string name
       string city
       int qsRank
@@ -14,35 +14,35 @@ erDiagram
     }
 
     SCHOLARSHIP {
-      string id PK
-      string universityId FK
+      string id
+      string universityId
       string name
-      string type  // "merit" | "need-based" | "athletic" | "international"
+      string type
       int amountMnt
       string description
     }
 
     PROGRAM {
-      string id PK
-      string name  // e.g., "Компьютер", "Эдийн засаг", ...
+      string id
+      string name
     }
 
     UNIVERSITY_PROGRAM {
-      string id PK
-      string universityId FK
-      string programId FK
+      string id
+      string universityId
+      string programId
     }
 
     RANKING {
-      string universityId PK FK
+      string universityId
       string name
       int qsRank
     }
 
     EVENT {
-      int id PK
+      int id
       string title
-      date date
+      date eventDate
       string time
       string location
       string type
@@ -50,13 +50,13 @@ erDiagram
       string description
       int spots
       int registered
-      boolean online
-      string hostedUniversityId FK  // optional
+      bool online
+      string hostedUniversityId
     }
 
     UNIVERSITY ||--o{ SCHOLARSHIP : offers
     UNIVERSITY ||--o{ UNIVERSITY_PROGRAM : offers
-    PROGRAM   ||--o{ UNIVERSITY_PROGRAM : included_in
+    PROGRAM   ||--o{ UNIVERSITY_PROGRAM : includes
     UNIVERSITY ||--|| RANKING : has
-    UNIVERSITY ||--o{ EVENT : hosts (optional)
+    UNIVERSITY ||--o{ EVENT : hosts
 ```
