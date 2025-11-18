@@ -1,8 +1,7 @@
 ```mermaid
 flowchart LR
 
-%% ---------- CUSTOMER POOL ----------
-subgraph Customer[Customer (Сурагч)]
+subgraph Customer[Customer]
 direction TB
 C_Start((Эхлэл))
 C_Select[Функц сонгох]
@@ -24,7 +23,7 @@ C_End(((Дуусгавар)))
 end
 
 %% ---------- SYSTEM POOL ----------
-subgraph System[System (Вэб Апп + Серверсайд Логик)]
+subgraph System[System]
 direction TB
 S_RenderHome[Нүүр хуудас рэндэрлэх]
 S_ShowNav[Сонголтын цэс гаргах]
