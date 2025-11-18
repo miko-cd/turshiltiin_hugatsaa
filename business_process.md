@@ -1,84 +1,76 @@
 ```mermaid
 flowchart LR
 
-%% Swimlanes (subgraphs)
-subgraph L1[Student]
+%% ---------- CUSTOMER POOL ----------
+subgraph Customer[Customer (Сурагч)]
 direction TB
-  s_start([Start])
-  s_openHome[Open site]
-  s_choose{Choose feature}
-  s_viewUni[Browse universities]
-  s_viewRank[View rankings]
-  s_viewProg[View programs]
-  s_viewEvents[View events]
-  s_useCalc[Use scholarship calculator]
-  s_useCompare[Compare universities]
-  s_contact[Contact university]
-  s_end([End])
+C_Start((Эхлэл))
+C_Select[Функц сонгох]
+C_ViewUnis[Их сургууль жагсаалт үзэх]
+C_PickUni[Их сургууль сонгох]
+C_ViewDetails[Тухайн сургуулийн дэлгэрэнгүйг харах]
+C_DecideContact{Холбоо барих уу?}
+C_Contact[Вэб / И-мэйл / Утас руу гарах]
+C_ViewRank[Рэнкинг үзэх]
+C_ViewPrograms[Хөтөлбөрүүд үзэх]
+C_ViewEvents[Үйл явдлууд үзэх]
+C_UseCalc[Тэтгэлгийн калькулятор ашиглах]
+C_InputData[GPA / Орлого / Үйл ажиллагаа оруулах]
+C_SeeRecommendation[Зөвлөмж харах]
+C_Compare[Их сургуулиудыг харьцуулах]
+C_SelectForCompare[Харьцуулах сургуулиудыг сонгох]
+C_BackHome[Буцах / Нүүр рүү]
+C_End(((Дуусгавар)))
 end
 
-subgraph L2[Web App (UI)]
+%% ---------- SYSTEM POOL ----------
+subgraph System[System (Вэб Апп + Серверсайд Логик)]
 direction TB
-  ui_home[Render Home / Navigation]
-  ui_list_unis[Render Universities list]
-  ui_uni_detail[Render University detail]
-  ui_rankings[Render Rankings]
-  ui_programs[Render Programs]
-  ui_events[Render Events]
-  ui_calc[Render Calculator]
-  ui_compare[Render Compare]
-  ui_contact_links[Show contact links (website/email/phone)]
+S_RenderHome[Нүүр хуудас рэндэрлэх]
+S_ShowNav[Сонголтын цэс гаргах]
+S_FetchUnis[mockUniversities ачаалах]
+S_RenderUniList[Жагсаалт рэндэрлэх]
+S_GetUniById[Сургуулийн өгөгдлийг хайх]
+S_RenderUniDetail[Дэлгэрэнгүйг рэндэрлэх]
+S_AggregatePrograms[Хөтөлбөрүүдийг нэгтгэх]
+S_RenderPrograms[Хөтөлбөрүүдийн дэлгэц]
+S_BuildRankings[mockRankings үүсгэх]
+S_RenderRankings[Рэнкинг дэлгэц]
+S_FetchEvents[events ачаалах]
+S_RenderEvents[Үйл явдлын дэлгэц]
+S_CalcScore[Оноо тооцоолох]
+S_RenderCalc[Калькуляторын дэлгэц]
+S_BuildCompare[Харьцуулалтын мөрүүд үүсгэх]
+S_RenderCompare[Харьцуулалт рэндэрлэх]
+S_ShowContactLinks[Вэб / И-мэйл / Утас линк]
 end
 
-subgraph L3[App Logic (Services)]
-direction TB
-  svc_fetch_unis[fetchUniversities]
-  svc_get_uni[findUniversityById]
-  svc_fetch_rankings[build mockRankings]
-  svc_aggregate_programs[aggregate Programs]
-  svc_fetch_events[fetch Events]
-  svc_calc_score[calculate score + recommendation]
-  svc_build_compare[build comparison view]
-end
+%% ---------- FLOW CONNECTIONS ----------
 
-subgraph L4[Data Source (Mock)]
-direction TB
-  data_unis[mockUniversities]
-  data_rankings[mockRankings()]
-  data_events[events array]
-end
+%% Эхлэх
+C_Start --> S_RenderHome --> S_ShowNav --> C_Select
 
-subgraph L5[External University]
-direction TB
-  ext_site[Open website / email / phone]
-end
+%% Их сургуулиудын урсгал
+C_Select -->|Их сургуулиуд| C_ViewUnis --> S_FetchUnis --> S_RenderUniList --> C_PickUni --> S_GetUniById --> S_RenderUniDetail --> C_ViewDetails
+C_ViewDetails --> S_ShowContactLinks --> C_DecideContact
+C_DecideContact -->|Тийм| C_Contact --> C_End
+C_DecideContact -->|Үгүй| C_BackHome --> S_ShowNav --> C_Select
 
-%% Main navigation
-s_start --> s_openHome --> ui_home --> s_choose
+%% Рэнкинг урсгал
+C_Select -->|Рэнкинг| C_ViewRank --> S_BuildRankings --> S_RenderRankings --> C_End
 
-%% Universities flow
-s_choose -- Universities --> s_viewUni --> ui_list_unis --> svc_fetch_unis --> data_unis
-data_unis --> svc_fetch_unis --> ui_list_unis
-s_viewUni --> ui_uni_detail
-ui_uni_detail --> svc_get_uni --> data_unis
-ui_uni_detail --> ui_contact_links --> s_contact --> ext_site --> s_end
+%% Хөтөлбөрүүд урсгал
+C_Select -->|Хөтөлбөр| C_ViewPrograms --> S_AggregatePrograms --> S_RenderPrograms --> C_End
 
-%% Rankings flow
-s_choose -- Rankings --> s_viewRank --> ui_rankings --> svc_fetch_rankings --> data_unis
-svc_fetch_rankings --> data_rankings --> ui_rankings --> s_end
+%% Үйл явдлууд урсгал
+C_Select -->|Үйл явдал| C_ViewEvents --> S_FetchEvents --> S_RenderEvents --> C_End
 
-%% Programs flow
-s_choose -- Programs --> s_viewProg --> ui_programs --> svc_aggregate_programs --> data_unis
-svc_aggregate_programs --> ui_programs --> s_end
+%% Тэтгэлгийн калькулятор урсгал
+C_Select -->|Калькулятор| C_UseCalc --> S_RenderCalc --> C_InputData --> S_CalcScore --> S_RenderCalc --> C_SeeRecommendation --> C_End
 
-%% Events flow
-s_choose -- Events --> s_viewEvents --> ui_events --> svc_fetch_events --> data_events
-data_events --> ui_events --> s_end
+%% Харьцуулалт урсгал
+C_Select -->|Харьцуулах| C_Compare --> C_SelectForCompare --> S_BuildCompare --> S_RenderCompare --> C_End
 
-%% Scholarship calculator flow
-s_choose -- Calculator --> s_useCalc --> ui_calc --> svc_calc_score --> ui_calc --> s_end
-
-%% Compare flow
-s_choose -- Compare --> s_useCompare --> ui_compare --> svc_build_compare --> data_unis
-svc_build_compare --> ui_compare --> s_end
+%% Нүүр рүү буцах ерөнхий
+C_BackHome --> S_RenderHome
 ```
