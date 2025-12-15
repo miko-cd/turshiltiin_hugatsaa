@@ -1,5 +1,5 @@
-mermaid
-```
+
+``` mermaid
 flowchart TD
     A[Start] --> B[Connect SQL Server]
     B --> C[Read numeric data<br/>APRU_increased → df_num]
